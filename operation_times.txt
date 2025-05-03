@@ -1,42 +1,42 @@
 Typ Obliczen: SIMD
 Liczba liczb: 2048
 Sredni czas [x]ms:
-+ 0.347
-- 0.349
-* 0.38
-/ 0.335
++ 0.33
+- 0.319
+* 0.322
+/ 0.382
 Typ Obliczen: SIMD
 Liczba liczb: 4096
 Sredni czas [x]ms:
-+ 0.509
-- 0.51
-* 0.516
-/ 0.5
++ 0.489
+- 0.483
+* 0.487
+/ 0.513
 Typ Obliczen: SIMD
 Liczba liczb: 8192
 Sredni czas [x]ms:
-+ 0.787
-- 0.769
-* 0.767
-/ 0.758
++ 0.746
+- 0.742
+* 0.741
+/ 0.757
 Typ Obliczen: SISD
 Liczba liczb: 2048
 Sredni czas [x]ms:
-+ 0.344
-- 0.351
-* 0.345
-/ 0.358
++ 0.71
+- 0.773
+* 0.691
+/ 0.632
 Typ Obliczen: SISD
 Liczba liczb: 4096
 Sredni czas [x]ms:
-+ 0.503
-- 0.5
-* 0.504
-/ 0.548
++ 0.998
+- 1.02
+* 0.979
+/ 0.95
 Typ Obliczen: SISD
 Liczba liczb: 8192
 Sredni czas [x]ms:
-+ 0.759
-- 0.769
-* 0.763
-/ 0.793
++ 1.502
+- 1.512
+* 1.489
+/ 1.468

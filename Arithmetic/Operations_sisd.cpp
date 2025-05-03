@@ -11,21 +11,18 @@ double gen_add(int n)
     std::uniform_real_distribution<float> distribution(0, 1000);
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < n / 8; i++)
+    float vec1[n];
+    float vec2[n];
+
+    for (int j = 0; j < n; j++)
     {
-        float vec1[4];
-        float vec2[4];
+        vec1[j] = distribution(gen);
+        vec2[j] = distribution(gen);
+    }
 
-        for (int j = 0; j < 4; j++)
-        {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
-        }
-
-        for(int j = 0; j < 4; j++)
-        {
-            vec1[j] += vec2[j];
-        }
+    for(int j = 0; j < n; j++)
+    {
+        vec1[j] += vec2[j];
     }
 
     auto endTime = std::chrono::high_resolution_clock::now();
@@ -42,21 +39,18 @@ double gen_sub(int n)
     std::uniform_real_distribution<float> distribution(0, 1000);
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < n / 8; i++)
+    float vec1[n];
+    float vec2[n];
+
+    for (int j = 0; j < n; j++)
     {
-        float vec1[4];
-        float vec2[4];
+        vec1[j] = distribution(gen);
+        vec2[j] = distribution(gen);
+    }
 
-        for (int j = 0; j < 4; j++)
-        {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
-        }
-
-        for (int j = 0; j < 4; j++)
-        {
-            vec1[j] -= vec2[j];
-        }
+    for (int j = 0; j < n; j++)
+    {
+        vec1[j] -= vec2[j];
     }
 
     auto endTime = std::chrono::high_resolution_clock::now();
@@ -73,21 +67,18 @@ double gen_mul(int n)
     std::uniform_real_distribution<float> distribution(0, 1000);
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < n / 8; i++)
+    float vec1[n];
+    float vec2[n];
+
+    for (int j = 0; j < n; j++)
     {
-        float vec1[4];
-        float vec2[4];
+        vec1[j] = distribution(gen);
+        vec2[j] = distribution(gen);
+    }
 
-        for (int j = 0; j < 4; j++)
-        {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
-        }
-
-        for (int j = 0; j < 4; j++)
-        {
-            vec1[j] *= vec2[j];
-        }
+    for (int j = 0; j < n; j++)
+    {
+        vec1[j] *= vec2[j];
     }
 
     auto endTime = std::chrono::high_resolution_clock::now();
@@ -104,21 +95,18 @@ double gen_div(int n)
     std::uniform_real_distribution<float> distribution(0, 1000);
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < n / 8; i++)
+    float vec1[n];
+    float vec2[n];
+
+    for (int j = 0; j < n; j++)
     {
-        float vec1[4];
-        float vec2[4];
+        vec1[j] = distribution(gen);
+        vec2[j] = distribution(gen);
+    }
 
-        for (int j = 0; j < 4; j++)
-        {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
-        }
-
-        for (int j = 0; j < 4; j++)
-        {
-            vec1[j] /= vec2[j];
-        }
+    for (int j = 0; j < n; j++)
+    {
+        vec1[j] /= vec2[j];
     }
 
     auto endTime = std::chrono::high_resolution_clock::now();
