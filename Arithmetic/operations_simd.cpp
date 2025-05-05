@@ -4,7 +4,7 @@
 #include <random>
 #include <chrono>
 
-// ile wektorów: 2048/8 = 256  4096/8 = 512  8192/8 = 1024
+// ile wektorów: 2048/4 = 512  4096/4 = 1024  8192/4 = 2048
 //  https://net-informations.com/asm/adv/vector.htm
 // https://docs.oracle.com/cd/E26502_01/html/E28388/eojde.html
 
@@ -17,15 +17,15 @@ double gen_add_vectors(int n)
     std::uniform_real_distribution<float> distribution(0, 1000);
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < n / 8; i++)
+    for (int i = 0; i < n / 4; i++)
     {
         float vec1[4];
         float vec2[4];
 
         for (int j = 0; j < 4; j++)
         {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
+            vec1[j] = static_cast<float>(distribution(gen));
+            vec2[j] = static_cast<float>(distribution(gen));
         }
 
         __asm__ volatile(
@@ -60,8 +60,8 @@ double gen_sub_vectors(int n)
 
         for (int j = 0; j < 4; j++)
         {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
+            vec1[j] = static_cast<float>(distribution(gen));
+            vec2[j] = static_cast<float>(distribution(gen));
         }
 
         __asm__ volatile(
@@ -95,8 +95,8 @@ double gen_mul_vectors(int n)
 
         for (int j = 0; j < 4; j++)
         {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
+            vec1[j] = static_cast<float>(distribution(gen));
+            vec2[j] = static_cast<float>(distribution(gen));
         }
 
         __asm__ volatile(
@@ -130,8 +130,8 @@ double gen_div_vectors(int n)
 
         for (int j = 0; j < 4; j++)
         {
-            vec1[j] = distribution(gen);
-            vec2[j] = distribution(gen);
+            vec1[j] = static_cast<float>(distribution(gen));
+            vec2[j] = static_cast<float>(distribution(gen));
         }
 
         __asm__ volatile(

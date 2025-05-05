@@ -33,18 +33,15 @@ current_size = None
 current_type = None
 
 for line in data.split('\n'):
-    # Extract calculation type
     type_match = re.search(r'Typ Obliczen: (\w+)', line)
     if type_match:
         current_type = type_match.group(1)
     
-    # Extract size
     size_match = re.search(r'Liczba liczb: (\d+)', line)
     if size_match:
         current_size = int(size_match.group(1))
         unique_sizes.add(current_size)
     
-    # Extract operation times
     for op in ['+', '-', '*', '/']:
         if line.startswith(op):
             time_value = float(line.split()[1])
@@ -53,13 +50,11 @@ for line in data.split('\n'):
             elif current_type == "SISD":
                 operation_times_sisd[op].append((current_size, time_value))
 
-# Sort data by size
 sizes = sorted(list(unique_sizes))
 for op in ['+', '-', '*', '/']:
     operation_times_simd[op].sort(key=lambda x: x[0])
     operation_times_sisd[op].sort(key=lambda x: x[0])
 
-# Prepare data for plotting
 simd_times = {op: [t[1] for t in operation_times_simd[op]] for op in ['+', '-', '*', '/']}
 sisd_times = {op: [t[1] for t in operation_times_sisd[op]] for op in ['+', '-', '*', '/']}
 
@@ -76,17 +71,15 @@ for op in ['+', '-', '*', '/']:
 # Chart 1: Average time by number of operations for each operation type (SIMD & SISD)
 plt.figure(figsize=(12, 7))
 
-# Plot SIMD lines (solid)
 for op, times in simd_times.items():
     plt.plot(sizes, times, marker='o', linestyle='-', label=f'SIMD {op}')
 
-# Plot SISD lines (dashed)
 for op, times in sisd_times.items():
     plt.plot(sizes, times, marker='s', linestyle='--', label=f'SISD {op}')
 
-plt.xlabel('Number of Operations')
-plt.ylabel('Average Time (ms)')
-plt.title('Average Time vs Number of Operations (SIMD vs SISD)')
+plt.xlabel('Liczba operacji')
+plt.ylabel('Średni czas (ms)')
+plt.title('Średni czas a liczba operacji (SIMD vs SISD)')
 plt.grid(True, linestyle='--', alpha=0.7)
 plt.legend()
 plt.tight_layout()
@@ -95,7 +88,7 @@ plt.close()
 
 # Chart 2: Average time by operation type for 8192 numbers (SIMD & SISD)
 operations = ['+', '-', '*', '/']
-index_8192 = sizes.index(8192)  # Find index for 8192 in our sizes list
+index_8192 = sizes.index(8192) 
 
 simd_times_8192 = [simd_times[op][index_8192] for op in operations]
 sisd_times_8192 = [sisd_times[op][index_8192] for op in operations]
@@ -109,7 +102,6 @@ width = 0.35
 bars1 = plt.bar(x - width/2, simd_times_8192, width, label='SIMD')
 bars2 = plt.bar(x + width/2, sisd_times_8192, width, label='SISD')
 
-# Add time values and percentage improvement on top of each bar
 for i, (bar1, bar2) in enumerate(zip(bars1, bars2)):
     height1 = bar1.get_height()
     height2 = bar2.get_height()
@@ -120,16 +112,15 @@ for i, (bar1, bar2) in enumerate(zip(bars1, bars2)):
              f'{height2:.3f}',
              ha='center', va='bottom')
     
-    # Add percentage improvement between bars
     avg_x = (bar1.get_x() + bar1.get_width() + bar2.get_x()) / 2
     plt.text(avg_x, max(height1, height2) * 0.5,
              f'+{improvement_8192[i]:.1f}%',
              ha='center', va='center',
              bbox=dict(facecolor='white', alpha=0.8, boxstyle='round,pad=0.2'))
 
-plt.xlabel('Operation Type')
-plt.ylabel('Average Time (ms)')
-plt.title('Average Execution Time by Operation Type for 8192 Numbers (SIMD vs SISD)')
+plt.xlabel('Typ operacji')
+plt.ylabel('Średni czas (ms)')
+plt.title('Porównanie czasu wykonania wg operacji dla 8192 liczb (SIMD vs SISD)')
 plt.xticks(x, operations)
 plt.legend()
 plt.grid(True, axis='y', linestyle='--', alpha=0.7)
@@ -142,16 +133,48 @@ plt.figure(figsize=(12, 7))
 for op in operations:
     plt.plot(sizes, percentage_improvement[op], marker='o', label=f'Operation {op}')
 
-plt.xlabel('Number of Operations')
-plt.ylabel('Percentage Improvement (%)')
-plt.title('SIMD Performance Improvement over SISD (%)')
+plt.xlabel('Liczba operacji')
+plt.ylabel('Zysk (%)')
+plt.title('Zysk operacji typu SIMD do operacji SISD  (%)')
 plt.grid(True, linestyle='--', alpha=0.7)
 plt.legend()
 plt.tight_layout()
 plt.savefig('chart3_percentage_improvement.png')
 
+# NEW CHART 4: Only SIMD operations comparison
+plt.figure(figsize=(12, 7))
+
+for op in operations:
+    plt.plot(sizes, simd_times[op], marker='o', linestyle='-', label=f'SIMD {op}')
+
+plt.xlabel('Liczba operacji')
+plt.ylabel('Średni czas (ms)')
+plt.title('Średni czas a liczba operacji (tylko SIMD)')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.legend()
+plt.tight_layout()
+plt.savefig('chart4_simd_only_comparison.png')
+plt.close()
+
+# NEW CHART 5: Only SISD operations comparison
+plt.figure(figsize=(12, 7))
+
+for op in operations:
+    plt.plot(sizes, sisd_times[op], marker='s', linestyle='-', label=f'SISD {op}')
+
+plt.xlabel('Liczba operacji')
+plt.ylabel('Średni czas (ms)')
+plt.title('Średni czas a liczba operacji (tylko SISD)')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.legend()
+plt.tight_layout()
+plt.savefig('chart5_sisd_only_comparison.png')
+plt.close()
+
 print("Charts have been generated successfully!")
 print("- chart1_time_vs_operations_comparison.png: Shows time comparison between SIMD and SISD")
 print("- chart2_time_by_operation_8192_comparison.png: Shows time comparison for 8192 numbers")
 print("- chart3_percentage_improvement.png: Shows percentage improvement of SIMD over SISD")
+print("- chart4_simd_only_comparison.png: Shows comparison of SIMD operations only")
+print("- chart5_sisd_only_comparison.png: Shows comparison of SISD operations only")
 print(f"\nData was read from 'operation_times.txt' containing {len(sizes)} different operation sizes.")

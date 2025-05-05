@@ -1,0 +1,255 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{gensymb}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{karnaugh-map}
+\usepackage{tikz}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+
+\begin{document}
+
+\begin{multicols}{3}
+    \begin{figure}[H]
+        \includegraphics[scale=0.4]{jpg/DOJEBANE_LOGO_PWR.png}
+        \label{fig:enter-label}
+    \end{figure}
+    
+    \begin{figure}[H]
+    \end{figure}
+    
+    \begin{figure}[H]
+        \includegraphics[scale=0.4]{jpg/w4n.png}
+        \centering
+        \textbf{W4N}
+        \label{fig:WYDZIAŁ INFORMATYKI I TELEKOMUNIKACJI}
+    \end{figure}
+\end{multicols}
+
+\vspace{75pt}
+
+\begin{center}
+    \textbf{\large Porównanie efektywności operacji arytmetycznych wektorowych SIMD i zwykłych SISD} 
+    \vspace{2pt}
+    \hrule
+    \vspace{4pt}
+    \textbf{\large Organizacja i Architektura Komputerów} 
+\end{center}
+
+\vspace{75pt}
+
+\begin{center}
+    \textbf{Autor: } \\
+    Filip Kwiek 280947
+\end{center}
+
+\begin{center}
+    \textbf{Termin zajęć: } \\
+    Środa np. 9:15
+\end{center}
+
+\begin{center}
+    \textbf{Prowadzący: } \\
+    Mgr. inż. Tomasz Serafin
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Wprowadzenie}
+
+Celem eksperymentu było porównanie efektywności czasowej operacji arytmetycznych wektorowych i niewektorowych.
+
+\subsection{Rys historyczny}
+
+\subsection{Operacje SISD i SIMD}
+
+\section{Użyty sprzęt}
+
+\begin{itemize}
+    \item Procesor: AMD Ryzen 5 3550h
+    \item System Operacyjny: Arch linux
+    \item Kernel: 6.4.14-zen1-2-zen
+    \item Ram: 32Gb DDR4 2666MHZ 
+\end{itemize}
+
+\section{Przebieg pracy nad programem}
+
+Na labolatoriach wprowadzających stworzyłem funkcje odpowiadające za operacje oparte na wektorach, napisane za pomocą wstawek assemblerowych w moich programach pisanych w C.
+Następnie w domu przez resztę czasu stworzyłem funkcje odpowiadające za operacje SISD, obsługę obu typów operacji, a następnie tworzenie pliku z danymi, które powstały w wyniku badania.
+Ponadto do obróbki danych powstał skrypt w pythonie, który odpowiada za generację wykresów na podstawie danych z pliku.
+
+\section{Uruchamianie programu}
+
+Na potrzeby programu powstał makefile, który odpowiada za kompilację wszystkich plików i został stworzony na podstawie 
+zasobów dostępnych w internecie:
+
+\begin{verbatim}
+    # Compiler
+    CXX = g++
+    # Compiler flags
+    CXXFLAGS = -Wall -g
+    # Include paths (add -I flags for header directories if needed)
+    INCLUDES = -I.
+    # Target executable
+    TARGET = main
+    # For deleting the target
+    TARGET_DEL = main.out
+    
+    # Find all source files recursively
+    SRCS := $(shell find . -name "*.cpp")
+    # Generate object file paths (preserving directory structure)
+    OBJS := $(SRCS:.cpp=.o)
+    # Find all header files recursively (for dependency generation)
+    HEADERS := $(shell find . -name "*.h")
+    
+    # Default rule to build and run the executable
+    all: $(TARGET) run
+    
+    # Rule to link object files into the target executable
+    $(TARGET): $(OBJS)
+        $(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
+    
+    # Rule to compile .cpp files into .o files with automatic header dependencies
+    %.o: %.cpp
+        $(CXX) $(CXXFLAGS) $(INCLUDES) -MMD -MP -c $< -o $@
+    
+    # Include dependency files
+    -include $(OBJS:.o=.d)
+    
+    # Rule to run the executable
+    run: $(TARGET)
+        ./$(TARGET)
+    
+    # Clean rule to remove generated files
+    clean:
+        del $(TARGET_DEL) $(OBJS) $(OBJS:.o=.d)
+\end{verbatim}
+
+W folderze źródłowym, tym samym gdzie znajduje się makefile należy uruchomić polecenie: $make$.
+Po wpisaniu polecenia, program się uruchomi i wpisze dane do pliku z wynikami pomiarów czasu operacji.
+
+\section{Napotkane problemy}
+Jedyne problemy na jakie się natknąłem podczas pisania programu, to mój własny brak wiedzy, tj. nieznajomość, w jaki sposób należy się odnosić 
+to tablic zapisanych w pamięci w wstawkach assemblerowych, ale po przeczytaniu dokumentacji, przestało to stanowić problem.
+
+\section{Przebieg eksperymentu}
+
+W obu wypadkach działałem na liczbach zmiennoprzecinkowych, które był generowane pseudolosowo
+za pomocą następujących funkcji z biblioteki $random$:
+
+\begin{verbatim}
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> distribution(0, 1000);
+\end{verbatim}
+
+Następnie mierzyłem czas za pomocą funkcji $std::chrono::high\_resolution\_clock::now()$ z biblioteki $chrono$.
+
+\section{Operacje SIMD}
+
+\subsection{Dodawanie:}
+\begin{verbatim}
+    double gen_add_vectors(int n)
+{
+    // data generation
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::uniform_real_distribution<float> distribution(0, 1000);
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < n / 4; i++)
+    {
+        float vec1[4];
+        float vec2[4];
+
+        for (int j = 0; j < 4; j++)
+        {
+            vec1[j] = static_cast<float>(distribution(gen));
+            vec2[j] = static_cast<float>(distribution(gen));
+        }
+
+        __asm__ volatile(
+            "movaps (%0), %%xmm0\n"
+            "movaps (%1), %%xmm1\n"
+            "addps %%xmm1, %%xmm0\n" 
+            :                       
+            : "r"(vec1), "r" (vec2)
+            : "xmm0", "xmm1" 
+        );
+    }
+
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration<double, std::milli>(endTime - startTime).count();
+
+    return duration;
+}
+\end{verbatim}
+
+W powyższym kodzie najpier następuje generacja losowych liczb zmiennoprzecinkowych, które następnie wpisywane są do dwóch tablic 
+czterolelementowych. Następnie dodaję te dwa wektory do siebie za pomocą wstawki assemblerowej.
+
+Pozostałe operacje są robione w taki sam sposób różniąc się jedynie wstawkami assemblerowymi.
+
+\subsection{Odejmowanie:}
+
+\begin{verbatim}
+    __asm__ volatile(
+        "movaps (%0), %%xmm0\n"
+        "movaps (%1), %%xmm1\n"
+        "subps %%xmm1, %%xmm0\n" 
+        :                       
+        : "r"(vec1), "r" (vec2)
+        : "xmm0", "xmm1" 
+    );
+\end{verbatim}
+
+\subsection{Mnożenie:}
+
+\begin{verbatim}
+    __asm__ volatile(
+        "movaps (%0), %%xmm0\n"
+        "movaps (%1), %%xmm1\n"
+        "mulps %%xmm1, %%xmm0\n" 
+        :                       
+        : "r"(vec1), "r" (vec2)
+        : "xmm0", "xmm1" 
+    );
+\end{verbatim}
+
+\subsection{Dzielenie:}
+
+\begin{verbatim}
+    __asm__ volatile(
+        "movaps (%0), %%xmm0\n"
+        "movaps (%1), %%xmm1\n"
+        "divps %%xmm1, %%xmm0\n" 
+        :                       
+        : "r"(vec1), "r" (vec2)
+        : "xmm0", "xmm1" 
+    );
+\end{verbatim}
+
+\subsection{Wykresy}
+
+W wyniku eksperymentu powstały następujące wykresy:
+
+
+
+\section{Operacje SISD}
+
+\section{Wnioski}
+
+\end{document}

@@ -1,0 +1,17 @@
+\babel@toc {polish}{}\relax 
+\contentsline {section}{\numberline {1}Wprowadzenie}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Rys historyczny}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Operacje SISD i SIMD}{3}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Użyty sprzęt}{3}{section.2}%
+\contentsline {section}{\numberline {3}Przebieg pracy nad programem}{3}{section.3}%
+\contentsline {section}{\numberline {4}Uruchamianie programu}{3}{section.4}%
+\contentsline {section}{\numberline {5}Napotkane problemy}{4}{section.5}%
+\contentsline {section}{\numberline {6}Przebieg eksperymentu}{4}{section.6}%
+\contentsline {section}{\numberline {7}Operacje SIMD}{4}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Dodawanie:}{4}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Odejmowanie:}{5}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Mnożenie:}{5}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Dzielenie:}{5}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Wykresy}{5}{subsection.7.5}%
+\contentsline {section}{\numberline {8}Operacje SISD}{6}{section.8}%
+\contentsline {section}{\numberline {9}Wnioski}{6}{section.9}%

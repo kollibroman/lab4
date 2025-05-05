@@ -14,7 +14,7 @@ SRCS := $(shell find . -name "*.cpp")
 # Generate object file paths (preserving directory structure)
 OBJS := $(SRCS:.cpp=.o)
 # Find all header files recursively (for dependency generation)
-HEADERS := $(shell find . -name "*.h" -o -name "*.hpp")
+HEADERS := $(shell find . -name "*.h")
 
 # Default rule to build and run the executable
 all: $(TARGET) run
